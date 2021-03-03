@@ -72,3 +72,15 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 
+.DS_Store
+CountOnMe/.DS_Store
+CountOnMe/exports/.DS_Store
+CountOnMeTests/.DS_Store
+CountOnMeUITests/.DS_Store
+CountOnMe/Controller/.DS_Store
+CountOnMe/View/.DS_Store
+CountOnMe/Model/.DS_Store
+CountOnMe/Supporting Files/.DS_Store
+*.xcuserstate
+CountOnMe.xcodeproj/project.xcworkspace/
+CountOnMe.xcodeproj/xcuserdata/
