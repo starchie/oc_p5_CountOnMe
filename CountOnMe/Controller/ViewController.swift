@@ -62,6 +62,12 @@ class ViewController: UIViewController {
         
         textView.text = calculous.expression
     }
+    @IBAction func tappedCommaButton(_ sender: UIButton) {
+        
+        calculous.expression.append(".")
+        textView.text = calculous.expression
+        
+    }
     
     // Add Operator
     @IBAction func tappedOperatorButton(_ sender: UIButton) {

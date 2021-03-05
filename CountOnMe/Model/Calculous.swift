@@ -47,10 +47,20 @@ class Calculous {
     
     func result()->String{
         
+        
         multiplicationFirst()
         divisionFirst()
         finishCalcul()
-        return operationsToReduce.first!
+        var result = operationsToReduce.first!
+        let lastNumberInResult = result[result.index(before: result.endIndex)]
+        let commaIndex = result.firstIndex(of: ".") ?? result.endIndex
+        if lastNumberInResult == "0"{
+            
+            result.remove(at: result.index(after: commaIndex))
+            result.remove(at: commaIndex)
+        }
+        //return operationsToReduce.first!
+        return result
     }
     
     
@@ -58,8 +68,8 @@ class Calculous {
         var multiplicationIndex = operationsToReduce.firstIndex(of: "x") ?? 0
         
         while (multiplicationIndex != 0) {
-            let left = Int(operationsToReduce[multiplicationIndex-1])!
-            let right = Int(operationsToReduce[multiplicationIndex+1])!
+            let left = Float(operationsToReduce[multiplicationIndex-1])!
+            let right = Float(operationsToReduce[multiplicationIndex+1])!
             let result = left * right
     
             operationsToReduce[multiplicationIndex] = "\(result)"
@@ -74,8 +84,8 @@ class Calculous {
         var divisionIndex = operationsToReduce.firstIndex(of: "÷") ?? 0
         
         while (divisionIndex != 0) {
-            let left = Int(operationsToReduce[divisionIndex-1])!
-            let right = Int(operationsToReduce[divisionIndex+1])!
+            let left = Float(operationsToReduce[divisionIndex-1])!
+            let right = Float(operationsToReduce[divisionIndex+1])!
             let result = left / right
     
             operationsToReduce[divisionIndex] = "\(result)"
@@ -89,11 +99,11 @@ class Calculous {
     private func finishCalcul() {
         while operationsToReduce.count > 1 {
  
-            let left = Int(operationsToReduce[0])!
+            let left = Float(operationsToReduce[0])!
             let operand = operationsToReduce[1]
-            let right = Int(operationsToReduce[2])!
+            let right = Float(operationsToReduce[2])!
 
-            let result: Int
+            let result: Float
             switch operand {
             case "+": result = left + right
             case "-": result = left - right
