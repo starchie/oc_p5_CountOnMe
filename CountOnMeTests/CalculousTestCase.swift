@@ -34,59 +34,65 @@ class CalculousTestCase: XCTestCase {
         }
     }
     
-    func testCalculEndWithOperator_WhenAddOperator_ThenAddOperatorShouldBeFalse() {
-        calculous.expression = "1 + "
-        XCTAssert(calculous.canAddOperator == false)
+    func testCalculWithNumber_WhenAddNumberAfterOperator_ThenExpressionShouldUpdate() {
+        calculous.expression = "1 +"
+        let text = calculous.HandleUserInput(input: "5", type: .number, completion: {(result,title,message)->() in })
+        XCTAssert(text == "1 + 5")
     }
     
-    func testCalculEndWithNumber_WhenAddOperator_ThenAddOperatorShouldBeTrue() {
-        calculous.expression = "1 + 1 "
-        XCTAssert(calculous.canAddOperator == true)
+    func testCalculWithOperator_WhenAddOperatorAfterNumber_ThenExpressionShouldUpdate() {
+        calculous.expression = "1 + 5"
+        let text = calculous.HandleUserInput(input: "+", type: .op, completion: {(result,title,message)->() in })
+        XCTAssert(text == "1 + 5 +")
     }
     
-    func testAskResult_WhenNoEnoughElements_ThenAddOperatorShouldBeFalse() {
-        calculous.expression = "1 +  "
-        XCTAssert(calculous.expressionIsCorrect == false)
+    func testCalculWithOperator_WhenAddOperatorAfterOperator_ThenExpressionShouldNotUpdate() {
+        calculous.expression = "1 + 5 +"
+        let text = calculous.HandleUserInput(input: "+", type: .op, completion: {(result,title,message)->() in })
+        XCTAssert(text == "1 + 5 +")
     }
     
-    func testAskResult_WhenEnoughElements_ThenAddOperatorShouldBeTrue() {
-        calculous.expression = "1 + 1 "
-        XCTAssert(calculous.expressionIsCorrect == true)
+    func testCalculWithResult_WhenAddOperator_ThenExpressionShouldUseResult() {
+        calculous.expression = "1 + 5 = 6"
+        let text = calculous.HandleUserInput(input: "*", type: .op, completion: {(result,title,message)->() in })
+        XCTAssert(text == "6 *")
     }
     
-    func testCalculHaveResult_WhenAddOperator_ThenUseThisResult() {
-        calculous.expression = "1 + 1 = 2 "
-        XCTAssert(calculous.expressionHaveResult == true)
-        
-        calculous.reduceExpressionToresult()
-        XCTAssert(calculous.expression == "2")
-        
-        calculous.expression.append(" + 1")
-        XCTAssert(calculous.result() == "3")
+    func testCalculComplex_WhenMultiplicationExist_ThenMultiplicationShouldBeCaluledFirst() {
+        calculous.expression = "1 + 5 x 2"
+        let text = calculous.HandleUserInput(input: "=", type: .equal, completion: {(result,title,message)->() in })
+        XCTAssert(text == "1 + 5 x 2 = 11")
     }
     
-    func testCalcul_WhenExpressionIsUpdated_ThenArrayShouldBeAlsoUpdated() {
-        calculous.expression = "5 x 2 "
-        XCTAssert(calculous.operationsToReduce.count == 3)
+    func testCalculWithFloat_WhenFloatIsNeeded_ThenResultShouldBeFloat() {
+        calculous.expression = "7 ÷ 2"
+        let text = calculous.HandleUserInput(input: "=", type: .equal, completion: {(result,title,message)->() in })
+        XCTAssert(text == "7 ÷ 2 = 3.5")
     }
     
-    func testCalcul_WhenThereIsMultiplication_ThenMultiplicationShouldBeCaluledFirst() {
-        calculous.expression = "5 + 5 x 2 - 2"
-        XCTAssert(calculous.result() == "13")
+    func testCalculWithFloat_WhenResultCanBeRounded_ThenResultShouldBeRounded() {
+        calculous.expression = "5.5 + 1.25 x 2"
+        let text = calculous.HandleUserInput(input: "=", type: .equal, completion: {(result,title,message)->() in })
+        XCTAssert(text == "5.5 + 1.25 x 2 = 8")
     }
     
-    func testCalcul_WhenThereIsDivision_ThenDivisionShouldBeCaluledFirst() {
-        calculous.expression = "5 + 10 ÷ 2 - 2"
-        XCTAssert(calculous.result() == "8")
+    func testCalculWithFloat_WhenCommaAlreadyInUseInAnotherSubString_ThenExpressionShouldUpdate() {
+        calculous.expression = "5.5 + 5.5 - 1"
+        let text = calculous.HandleUserInput(input: ".", type: .comma, completion: {(result,title,message)->() in })
+        XCTAssert(text == "5.5 + 5.5 - 1.")
     }
     
-    func testCalcul_WhenComplexeOperation_ThenResultShouldBeOk() {
-        calculous.expression = "5 + 20 x 3 + 10 ÷ 2 - 2"
-        XCTAssert(calculous.result() == "68")
+    func testCalculWithFloat_WhenCommaAlreadyInUse_ThenExpressionShouldNotUpdate() {
+        calculous.expression = "5.5 + 5."
+        let text = calculous.HandleUserInput(input: ".", type: .comma, completion: {(result,title,message)->() in })
+        XCTAssert(text == "5.5 + 5.")
     }
     
-    func testCalcul_WhenAnotherComplexeOperation_ThenResultShouldBeOkAgain() {
-        calculous.expression = "5 + 20 x 3 x 10 ÷ 2 - 2"
-        XCTAssert(calculous.result() == "303")
+    func testReset_WhenExpressionWithValues_ThenResetShouldClearExpression() {
+        calculous.expression = "5.5 + 5 = 10.5"
+        let text = calculous.HandleUserInput(input: "", type: .reset, completion: {(result,title,message)->() in })
+        XCTAssert(text == "")
     }
+    
+   
 }
