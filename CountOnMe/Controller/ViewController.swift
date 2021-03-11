@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     
     // RESET CALCUL
     @IBAction func tappedResetButton(_ sender: Any) {
-        textView.text =  calculous.HandleUserInput(input: "", type: .reset, completion: {(result,title,message)->() in})
+        textView.text =  calculous.handleUserInput(input: "", type: .reset, completion: {(result,title,message)->() in})
     }
     
     // NUMBER REQUEST
@@ -47,13 +47,13 @@ class ViewController: UIViewController {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
-        textView.text =  calculous.HandleUserInput(input: numberText, type: .number, completion: {(result,title,message)->() in
+        textView.text =  calculous.handleUserInput(input: numberText, type: .number, completion: {(result,title,message)->() in
             if result == false  { presentUIAlertController(title:title!, message:message!)} })
     }
     
     // COMMA REQUEST
     @IBAction func tappedCommaButton(_ sender: UIButton) {
-        textView.text = calculous.HandleUserInput(input: ".", type: .comma, completion: {(result,title,message)->() in
+        textView.text = calculous.handleUserInput(input: ".", type: .comma, completion: {(result,title,message)->() in
             if result == false { presentUIAlertController(title:title!, message:message!)} })
     }
     
@@ -62,13 +62,13 @@ class ViewController: UIViewController {
         guard let operatorText = sender.title(for: .normal) else {
             return
         }
-        textView.text = calculous.HandleUserInput(input: operatorText, type: .op, completion: {(result,title,message)->() in
+        textView.text = calculous.handleUserInput(input: operatorText, type: .op, completion: {(result,title,message)->() in
             if result == false  { presentUIAlertController(title:title!, message:message!)} })
     }
     
     // CALCUL REQUEST
     @IBAction func tappedEqualButton(_ sender: UIButton) {
-        textView.text = calculous.HandleUserInput(input: "=", type: .equal, completion: {(result,title,message)->() in
+        textView.text = calculous.handleUserInput(input: "=", type: .equal, completion: {(result,title,message)->() in
             if result == false  { presentUIAlertController(title:title!, message:message!)} })
     }
     

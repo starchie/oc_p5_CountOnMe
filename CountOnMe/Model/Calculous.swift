@@ -27,9 +27,13 @@ class Calculous {
         return expression.firstIndex(of: "=") != nil
     }
     
+    private var NumberCouldBeNegative: Bool {
+        return operationsToReduce.last == "÷" || operationsToReduce.last == "x"
+    }
+    
     private var expressionIsCorrect: Bool {
         return operationsToReduce.last != "+" && operationsToReduce.last != "-"
-            && operationsToReduce.last != "/" && operationsToReduce.last != "*"
+            && operationsToReduce.last != "÷" && operationsToReduce.last != "x"
     }
     
     private var expressionHaveEnoughElement: Bool {
@@ -38,7 +42,7 @@ class Calculous {
     
     private var canAddOperator: Bool {
         return operationsToReduce.last != "+" && operationsToReduce.last != "-"
-            && operationsToReduce.last != "/" && operationsToReduce.last != "*"
+            && operationsToReduce.last != "÷" && operationsToReduce.last != "x"
     }
     
     private var canAddComma: Bool {
@@ -120,8 +124,7 @@ class Calculous {
             let result: Float
             switch operand {
             case "+": result = left + right
-            case "-": result = left - right
-            default: fatalError("Unknown operator !")
+            default:  result = left - right
             }
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert("\(result)", at: 0)
@@ -137,6 +140,7 @@ class Calculous {
         var result = operationsToReduce.first!
         let lastNumberInResult = result[result.index(before: result.endIndex)]
         let commaIndex = result.firstIndex(of: ".") ?? result.endIndex
+        print (commaIndex)
         if lastNumberInResult == "0"{
             result.remove(at: result.index(after: commaIndex))
             result.remove(at: commaIndex)
@@ -146,7 +150,7 @@ class Calculous {
     
     // MARK: - MANAGE INPUTS FROM CONTROLLER
     
-    func HandleUserInput(input : String, type : StringType, completion: (Bool,String?,String?)->())->String{
+    func handleUserInput(input : String, type : StringType, completion: (Bool,String?,String?)->())->String{
         switch type {
         case .equal:
             guard expressionIsCorrect else {
@@ -157,7 +161,7 @@ class Calculous {
                completion(false,"zero", "Not enough elements 2")
                 return (expression)
             }
-            expression.append(" = \(result())")
+            expression.append(" = \(result()) ")
             completion(true,nil,nil)
         case .comma:
             guard canAddComma else {
@@ -169,10 +173,15 @@ class Calculous {
         case .op:
             if expressionHaveResult {
                 reduceExpressionToresult()
-                expression.append(" \(input)")
+                expression.append(" \(input) ")
                 completion(true,nil,nil)
+            }else if (input == "-") && NumberCouldBeNegative {
+                    print("negativeNumber")
+                    expression.append("\(input)")
+                    completion(true,nil,nil)
             }else if canAddOperator {
-                expression.append(" \(input)")
+                print("canAdd")
+                expression.append(" \(input) ")
                 completion(true,nil,nil)
             }else {
                 completion(false,"zero","Operator already in use")
@@ -183,10 +192,12 @@ class Calculous {
             if expressionHaveResult {
                 reset()
             }
-            expression.append(" \(input)")
+            expression.append("\(input)")
            completion(true,nil,nil)
         }
+        print (operationsToReduce)
         return (expression)
+       
     }// End HandleUserInput
     
     
